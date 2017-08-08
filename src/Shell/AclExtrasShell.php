@@ -92,6 +92,18 @@ class AclExtrasShell extends Shell
     {
         $this->AclExtras->acoUpdate($this->params);
     }
+   
+    /**
+     * Updates the Aro Tree with existing users/groups.
+     *
+     * @return void
+     */
+    public function aroUpdate()
+    {
+        $this->loadModel($this->args[0]);
+        $this->AclExtras->aro_update( $this->{$this->args[0]} );
+        return true;
+    }
 
     /**
      * Get the option parser for this shell.
