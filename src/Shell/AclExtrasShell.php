@@ -101,7 +101,7 @@ class AclExtrasShell extends Shell
     public function aroUpdate()
     {
         $this->loadModel($this->args[0]);
-        $this->AclExtras->aro_update( $this->{$this->args[0]} );
+        $this->AclExtras->aroUpdate( $this->{$this->args[0]} );
         return true;
     }
 
