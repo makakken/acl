@@ -186,6 +186,38 @@ class AclExtras
 
         return true;
     }
+    
+    public function aroUpdate( $aro_import_model ) {
+        // Get model information
+        $import_aros = $aro_import_model->find('all');
+        $pk = $aro_import_model->primaryKey();
+        $alias = $aro_import_model->alias();
+        // Get parent node
+        $root_node = $this->Acl->Aro->find()->where(['alias' => $alias, 'model' => $alias, 'parent_id IS NULL'])->first();
+        if (!$root_node) {
+            $root_node = $this->Acl->Aro->newEntity([
+                    'alias' => $alias,
+                    'model' => $alias
+            ]);
+            $this->Acl->Aro->save( $root_node );
+        }
+        $parentId = $root_node->id;
+        // Add AROs
+        $aros = $this->Acl->Aro->find()->where(['model' => $alias, 'parent_id' => $parentId]);
+        foreach ($import_aros as $import_aro) {
+            foreach ($aros as $aro) {
+                if ($aro->foreign_key == $import_aro->{$pk}) {
+                    continue 2;
+                }
+            }
+            $entity = $this->Acl->Aro->newEntity([
+                    'model' => $alias,
+                    'foreign_key' => $import_aro->{$pk},
+                    'parent_id' => $parentId
+            ]);
+            $this->Acl->Aro->save( $entity );
+        }
+    }
 
     /**
      * Updates the Aco Tree with all App controllers.
