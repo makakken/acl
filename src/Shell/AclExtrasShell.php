@@ -98,11 +98,10 @@ class AclExtrasShell extends Shell
      *
      * @return void
      */
-    public function aroUpdate()
+    public function aroSync()
     {
         $this->loadModel($this->args[0]);
         $this->AclExtras->aroUpdate( $this->{$this->args[0]} );
-        return true;
     }
 
     /**
@@ -131,6 +130,12 @@ class AclExtrasShell extends Shell
                 'help' => __('Perform a full sync on the ACO table.' .
                     'Will create new ACOs or missing controllers and actions.' .
                     'Will also remove orphaned entries that no longer have a matching controller/action')
+            ])->addSubcommand('aro_sync', [
+                'parser' => [
+                    'options' => compact('plugin'),
+                    ],
+                'help' => __('Perform a full sync on the ARO table.' .
+                    'Will create new AROs from the given Model.')
             ])->addSubcommand('recover', [
                 'help' => __('Recover a corrupted Tree'),
                 'parser' => [
